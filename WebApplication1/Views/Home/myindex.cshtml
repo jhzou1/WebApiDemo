@@ -1,0 +1,59 @@
+﻿
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>myindex</title>
+    <script src="~/Scripts/jquery-3.3.1.min.js"></script>
+    <script type="text/javascript">
+        $(function ()
+        {
+            var userTicket = "";
+            $("#btnLogin").click(function ()
+            {
+                $.ajax({
+                    type: "post",
+                    url: "/api/SysAdmin/AdminLogin",
+                    contentType: "application/json",
+                    data: JSON.stringify(
+                        {
+                            LoginId: $("#txtLoginId").val(),
+                            LoginPwd: $("#txtLoginPwd").val()
+                        }),
+                    success: function (data, status)
+                    {
+                        //alert(data);//展示票据的JSON字符串
+                        var result = JSON.parse(data);//转换成JSON对象
+                        //alert(result);
+                        if (result.Success) {
+                            //如果登录成功，则保存当前Ticket到变量中，已被下次使用
+                            userTicket = result.Ticket;
+                            alert("登陆成功!票据是:" + userTicket);
+
+                            //转跳到指定网页
+                            location.href = "/MainForm/MainIndex/id?id=" + userTicket;
+
+                        } else {
+                            alert("用户登录失败！检查用户名或密码！");
+                        }
+                    }
+                });
+            });
+        });
+    </script>
+</head>
+<body>
+    <div>
+        <label>欢迎来到登陆界面!</label>
+        <br><br>
+        <label>用户名:</label>
+        <input type="text" id="txtLoginId" /><br/><br/>
+        <label>  密码:</label>
+        <input type="password" id="txtLoginPwd" /><br/><br/>
+
+        <input type="button" id="btnLogin" value="登陆"/>
+    </div>
+</body>
+</html>

@@ -1,0 +1,54 @@
+﻿
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>MainIndex</title>
+    <script src="~/Scripts/jquery-3.3.1.min.js"></script>
+    <script type="text/javascript">
+        $(function () {
+
+            var userTicket ="@ViewBag.UserTicket";
+
+            $("#btnShowTicket").click(function ()
+            {
+                alert(userTicket);
+            });
+
+            //调用具有验证特性的API控制器，并携带Ticket
+            $("#btnQuery").click(function () {
+                $.ajax({
+                    type: "post",
+                    url: "/api/SysAdmin/QueryAdminNameById",
+                    contentType: "application/json",
+                    data: JSON.stringify(
+                        {
+                           LoginId:"1001"
+                        }),
+                    beforeSend: function (xmlHttpRequest) {
+                        //alert(userTicket);//展示一下用户票据
+                        //异步请求之前向Http的head里面加入票据信息
+                        xmlHttpRequest.setRequestHeader("Authorization", "BasicAuthorize " + userTicket);
+                    },
+                    success: function (data, status) {
+
+                        alert(data);
+                    }
+                });
+            });
+        });
+    </script>
+</head>
+<body>
+    <div>
+        <label>欢迎来到主界面!</label>
+    </div>
+    <label>用户证书:</label><br /><br />
+    <label>@ViewBag.UserTicket</label>
+
+    <input type="button" id="btnShowTicket" value="显示获取到的Ticket" />
+
+    <input type="button" id="btnQuery" value="查询用户信息" />
+</body>
+</html>
